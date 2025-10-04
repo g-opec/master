@@ -176,7 +176,7 @@ display: flex;
 			<div class="shell-loader" data-a-target="shell-loader">
                 <div class="shell-loader__spinner"></div>
             </div>	
-			<h1 class="title">Carregando a pagina <span id="app-name"></span></h1>
+			<h1 class="title">Carregando página <span id="app-name"></span></h1>
 			</div>
          <p id="sub"></p>
 			<div class="message">
@@ -234,6 +234,7 @@ display: flex;
     if(objHash.includes("&")){
     let objTextHash = objHash.split('&');
     for(let i = 0;i<objTextHash.length;i++){
+        console.log(objTextHash[i].includes("page="))
       if(objTextHash[i].includes("page=")){
          document.getElementById('app-name').innerText = objTextHash[i].replace("page=","");
       }
