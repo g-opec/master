@@ -232,7 +232,7 @@ display: flex;
         finalHash = '#' + 'Bem_vindo'; 
     }
     let objHash = urlSearchParams.substring(1);
-    
+    objHash.replace("_"," ").replace("+"," ");
     let objTextHash = objHash.split('&');
     for(let i = 0;i<objTextHash.length;i++){
       console.log("oi ",objTextHash[i].includes("page="))  
