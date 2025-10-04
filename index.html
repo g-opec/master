@@ -230,7 +230,7 @@ display: flex;
         // Hash Bem_vindo
         finalHash = '#' + 'Bem_vindo'; 
     }
-    let objHash = finalHash.split('#')[1];
+    let objHash = urlSearchParams.substring(1);
     if(objHash.includes("&")){
     let objTextHash = objHash.split('&');
     for(let i = 0;i<objTextHash.length;i++){
@@ -249,32 +249,32 @@ display: flex;
      
         // Atualiza a URL principal com o Hash e remove o Query Parameter.
         //window.location.replace(window.location.href);
-        window.history.replaceState(null, '', window.location.href + finalHash); 
-        window.location.hash = finalHash;
-        console.log("URL :", window.location.href);
-        console.log("URL :", window.location.hash);
-        console.log("URL :", window.location.pathname);
-        console.log("URL inicial: Query Params convertidos para Hash:", finalHash);
+     //   window.history.replaceState(null, '', window.location.href + finalHash); 
+     //   window.location.hash = finalHash;
+     //   console.log("URL :", window.location.href);
+     //   console.log("URL :", window.location.hash);
+     //   console.log("URL :", window.location.pathname);
+     //   console.log("URL inicial: Query Params convertidos para Hash:", finalHash);
      
             // 5. LISTENER PARA O BOTÃO VOLTAR/AVANÇAR DO NAVEGADOR (HASHCHANGE)
-    window.addEventListener('hashchange', function() {
-        const hashParams = window.location.hash;
-        const iframe = document.getElementById('my-gas-iframe');
-        const iframeBaseSrc = iframe.src.split('?')[0];
+   // window.addEventListener('hashchange', function() {
+   //     const hashParams = window.location.hash;
+   //     const iframe = document.getElementById('my-gas-iframe');
+   //     const iframeBaseSrc = iframe.src.split('?')[0];
 
-        if (hashParams && hashParams.length > 1) {
-            // Converte o novo hash (#page=X) para o formato de query param (?page=X)
-            const params = '?' + hashParams.substring(1);
-            iframe.src = iframeBaseSrc + params;
-            console.log("Hashchange detectado. Iframe recarregado para:", iframe.src);
-        } else {
+   //     if (hashParams && hashParams.length > 1) {
+   //         // Converte o novo hash (#page=X) para o formato de query param (?page=X)
+   //         const params = '?' + hashParams.substring(1);
+   //         iframe.src = iframeBaseSrc + params;
+   //         console.log("Hashchange detectado. Iframe recarregado para:", iframe.src);
+   //     } else {
             // Se o hash foi limpo (ex: voltando para a raiz sem hash)
             // Mantém a URL principal sem hash, mas carrega o iframe no default.
-            iframe.src = iframeBaseSrc; // Carrega o iframe no padrão (home/BEM_VINDO)
-            window.history.replaceState(null, '', window.location.pathname); // Limpa o Hash da URL
-            console.log("Hash limpo. Iframe recarregado para o default.");
-      }
-    });
+   //         iframe.src = iframeBaseSrc; // Carrega o iframe no padrão (home/BEM_VINDO)
+   //         window.history.replaceState(null, '', window.location.pathname); // Limpa o Hash da URL
+   //         console.log("Hash limpo. Iframe recarregado para o default.");
+   //   }
+   // });
 
 
 
