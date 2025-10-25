@@ -206,44 +206,43 @@
     // LÓGICA DE REDIRECIONAMENTO DA PÁGINA PRINCIPAL
     // *******************************************************************
 
-    // Verifica se NÃO há o parâmetro 'authuser' na URL principal.
-    // Isso indica que o Google ainda não selecionou a conta.
+    // Verifica se NÃO há o parâmetro 'authuser'.
     if (!urlParams.has('authuser')) {
         
-        // 1. A URL para a qual o Google deve retornar é a URL do seu Web App.
-        // O Web App é quem receberá o ?authuser=X.
-        // Se a página principal tiver outros parâmetros (?page=X), eles devem ser incluídos.
-        let targetAppsScriptUrl = APPS_SCRIPT_URL_BASE + urlSearchParams;
+        // 1. Usa a URL completa atual.
+        let currentPageHref = window.location.href;
         
-        // 2. Codifica a URL do Apps Script para ser o destino de retorno do Google.
-        const REDIRECT_URL_APPS_SCRIPT = encodeURIComponent(targetAppsScriptUrl);
+        // 2. Codifica a URL COMPLETA ATUAL para ser o destino de retorno do Google.
+        // Adicionamos um parâmetro fake para garantir que a URL seja tratada como Query String, 
+        // o que resolve o erro 400.
+        const CURRENT_PAGE_URL = encodeURIComponent(currentPageHref + (currentPageHref.includes('?') ? '&' : '?') + 'fake=1');
         
         // 3. Monta a URL do Seletor de Contas.
-        const ACCOUNT_CHOOSER_URL = `https://accounts.google.com/AccountChooser/identifier?service=mail&continue=${REDIRECT_URL_APPS_SCRIPT}`;
+        const ACCOUNT_CHOOSER_URL = `https://accounts.google.com/AccountChooser/identifier?service=mail&continue=${CURRENT_PAGE_URL}`;
         
         // 4. Redireciona a página inteira para o seletor.
         console.log("Redirecionando página principal para Seletor de Contas.");
-        window.location.replace(ACCOUNT_CHOOSER_URL);
         
-        // Finaliza o script aqui, pois a página será redirecionada.
-        return; 
+        // O redirecionamento ocorre imediatamente, o código abaixo não será executado.
+        window.location.replace(ACCOUNT_CHOOSER_URL);
     } 
     
     // *******************************************************************
     // CARREGAMENTO DO IFRAME (Executado se a URL JÁ tiver ?authuser=X)
     // *******************************************************************
     
-    // Se o script chegou até aqui, é porque a URL JÁ tem o ?authuser=X
+    // Se o script chegou até aqui, a URL JÁ tem o ?authuser=X, 
+    // ou a lógica de redirecionamento falhou, mas o código continua rodando.
     
-    // Caso 1: Com Parâmetros (incluindo o ?authuser=X)
     if (urlSearchParams && urlSearchParams.length > 1) {
+        // Com Parâmetros (incluindo o ?authuser=X)
         finalIframeSrc = APPS_SCRIPT_URL_BASE + urlSearchParams; 
-        console.log("Authuser e parâmetros detectados. Iframe carregado diretamente:", finalIframeSrc);
+        console.log("Authuser e/ou parâmetros detectados. Iframe carregado diretamente:", finalIframeSrc);
         
         // Lógica de Hash (Mantida)
         finalHash = '#' + urlSearchParams.substring(1); 
     } else {
-        // Caso 2: Sem Parâmetros (mas já deve ter o ?authuser=X vindo do Google)
+        // Sem Parâmetros (apenas o ?authuser=X)
         finalIframeSrc = APPS_SCRIPT_URL_BASE + urlSearchParams; // Inclui apenas o ?authuser=X
         console.log("Carga inicial com Authuser. Iframe carregado com SRC base e authuser:", finalIframeSrc);
         
@@ -277,6 +276,7 @@
 </script>
 </body>
 </html>
+
 
 
 
