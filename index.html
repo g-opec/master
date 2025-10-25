@@ -209,21 +209,44 @@
     // Verifica se NÃO há o parâmetro 'authuser'.
     if (!urlParams.has('authuser')) {
         
-        // 1. Usa a URL completa atual.
-        let currentPageHref = window.location.href;
+        // --- INÍCIO DA CORREÇÃO DA URL CANÔNICA ---
+
+        // 1. Constrói a URL de retorno de forma canônica para evitar rejeição 400.
+        let canonicalUrl = window.location.protocol + '//' + window.location.host;
         
-        // 2. Codifica a URL COMPLETA ATUAL para ser o destino de retorno do Google.
-        // Adicionamos um parâmetro fake para garantir que a URL seja tratada como Query String, 
-        // o que resolve o erro 400.
-        const CURRENT_PAGE_URL = encodeURIComponent(currentPageHref + (currentPageHref.includes('?') ? '&' : '?') + 'fake=1');
+        // Se a URL termina em barra, o Google pode esperar o nome do arquivo. 
+        let path = window.location.pathname;
+        if (path.endsWith('/')) {
+            path += 'index.html'; // Adiciona o nome do arquivo padrão
+        }
+
+        canonicalUrl += path;
         
-        // 3. Monta a URL do Seletor de Contas.
+        // Adiciona a query string existente (se houver)
+        let currentSearchParams = window.location.search;
+        
+        // 2. Garante que a URL para o Google tenha um parâmetro (?fake=1) para resolver o 400.
+        if (currentSearchParams === "" || currentSearchParams === "?") {
+            canonicalUrl += '?fake=1';
+        } else {
+            // Se já tiver parâmetros, anexa o fake=1 no final
+            canonicalUrl += currentSearchParams + '&fake=1';
+        }
+        
+        // 3. Codifica a URL COMPLETA E CANÔNICA
+        const CURRENT_PAGE_URL = encodeURIComponent(canonicalUrl);
+        
+        console.log("URL canônica de redirecionamento para o Google:", canonicalUrl);
+        
+        // --- FIM DA CORREÇÃO DA URL CANÔNICA ---
+        
+        // 4. Monta a URL do Seletor de Contas.
         const ACCOUNT_CHOOSER_URL = `https://accounts.google.com/AccountChooser/identifier?service=mail&continue=${CURRENT_PAGE_URL}`;
         
-        // 4. Redireciona a página inteira para o seletor.
+        // 5. Redireciona a página inteira para o seletor.
         console.log("Redirecionando página principal para Seletor de Contas.");
         
-        // O redirecionamento ocorre imediatamente, o código abaixo não será executado.
+        // O redirecionamento ocorre imediatamente.
         window.location.replace(ACCOUNT_CHOOSER_URL);
     } 
     
@@ -232,10 +255,10 @@
     // *******************************************************************
     
     // Se o script chegou até aqui, a URL JÁ tem o ?authuser=X, 
-    // ou a lógica de redirecionamento falhou, mas o código continua rodando.
+    // ou a lógica de redirecionamento falhou.
     
     if (urlSearchParams && urlSearchParams.length > 1) {
-        // Com Parâmetros (incluindo o ?authuser=X)
+        // Com Parâmetros (incluindo o ?authuser=X e o ?fake=1)
         finalIframeSrc = APPS_SCRIPT_URL_BASE + urlSearchParams; 
         console.log("Authuser e/ou parâmetros detectados. Iframe carregado diretamente:", finalIframeSrc);
         
@@ -276,6 +299,7 @@
 </script>
 </body>
 </html>
+
 
 
 
