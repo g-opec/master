@@ -232,6 +232,9 @@ display: flex;
         finalHash = '#' + 'Bem_vindo'; 
     }
     let objHash = urlSearchParams.substring(1);
+	if(!objHash.includes("?")){
+      document.getElementById('sub').innerText = "Sincronizando Autorizações do Usuario";
+    }
     objHash = objHash.replace(/_/g, " ").replace(/\+/g, " ");
     let objTextHash = objHash.split('&');
     for(let i = 0;i<objTextHash.length;i++){
@@ -246,13 +249,12 @@ display: flex;
     if(!objHash.includes("&")){
       document.getElementById('app-name').innerText = objHash;
     }
-	if(!objHash.includes("?")){
-      document.getElementById('sub').innerText = "Sincronizando Autorizações do Usuario";
-    }
+	
      
 </script>
 </body>
 </html>
+
 
 
 
