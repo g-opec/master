@@ -185,98 +185,89 @@
         </div>
     </div>
 
-    <iframe id='my-gas-iframe' class="responsive-iframe"  allow="fullscreen; autoplay; camera; microphone; payment; geolocation">
+    <iframe id='my-gas-iframe' class="responsive-iframe" src="https://script.google.com/macros/s/AKfycbwPhXp8NbSH6JbEERcbxqSTix86QeilygGmH3PlQuTGJP8QVrhdQHo-Uob4powmTmOI5w/exec" allow="fullscreen; autoplay; camera; microphone; payment; geolocation">
     </iframe>
 
     <script>
-    // 1. URL base do seu Web App Apps Script (SUA URL COMPLETA)
-    // ESTA URL SERÁ O DESTINO DE RETORNO DO GOOGLE
-    const APPS_SCRIPT_URL_BASE = 'https://script.google.com/macros/s/AKfycbwPhXp8NbSH6JbEERcbxqSTix86QeilygGmH3PlQuTGJP8QVrhdQHo-Uob4powmTmOI5w/exec';
+        // *******************************************************************
+        // LÓGICA PARA FORÇAR A ESCOLHA DA CONTA (SOLUÇÃO MULTI-LOGIN)
+        // *******************************************************************
 
-    // 2. Encontrar o elemento iframe
-    const iframeElement = document.getElementById('my-gas-iframe');
+        // 1. Defina a URL base do seu Web App Apps Script (SUA URL COMPLETA)
+        // **IMPORTANTE: Substitua pela URL real do seu Web App.
+        const APPS_SCRIPT_URL_BASE = 'https://script.google.com/macros/s/AKfycbwPhXp8NbSH6JbEERcbxqSTix86QeilygGmH3PlQuTGJP8QVrhdQHo-Uob4powmTmOI5w/exec';
 
-    // 3. Obter a URLSearchParams para fácil verificação de parâmetros
-    const urlParams = new URLSearchParams(window.location.search);
-    const urlSearchParams = window.location.search;
+        // 2. Codifique a URL do Web App para o redirecionamento do Google
+        const REDIRECT_URL = encodeURIComponent(APPS_SCRIPT_URL_BASE);
+        
+        // 3. Monta a URL do Seletor de Contas do Google.
+        // O parâmetro 'continue' garante que, após a escolha,
+        // o navegador seja redirecionado para a URL do Apps Script,
+        // com o parâmetro ?authuser=X já anexado.
+        const ACCOUNT_CHOOSER_URL = `https://accounts.google.com/AccountChooser/identifier?service=mail&continue=${REDIRECT_URL}`;
+
+        // *******************************************************************
+        // LÓGICA EXISTENTE PARA PASSAGEM DE PARÂMETROS
+        // *******************************************************************
     
-    // VARIÁVEL QUE VAI DETERMINAR O SRC FINAL DO IFRAME
-    let finalIframeSrc = APPS_SCRIPT_URL_BASE; 
+        // 4. Encontrar o elemento iframe pelo seu ID
+        const iframeElement = document.getElementById('my-gas-iframe');
 
-    // *******************************************************************
-    // LÓGICA DE REDIRECIONAMENTO DA PÁGINA PRINCIPAL
-    // *******************************************************************
+        // 5. O SRC base agora é a URL do Account Chooser
+        let baseSrcWithChooser = ACCOUNT_CHOOSER_URL;
 
-    // Verifica se NÃO há o parâmetro 'authuser' na URL principal.
-    if (!urlParams.has('authuser')) {
+        // 6. Obter a string de busca completa da página principal
+        const urlSearchParams = window.location.search;
         
-        // 1. A URL para a qual o Google deve retornar é a URL do seu Apps Script.
-        // O Apps Script fará o redirecionamento final.
-        let targetAppsScriptUrl = APPS_SCRIPT_URL_BASE;
-        
-        // Se houver outros parâmetros (?page=X), inclua-os para que o Apps Script 
-        // possa passá-los para a página final do GitHub.
+        let finalHash = ''; 
+    
+        // 7. Verificar se há algum parâmetro na URL da página principal.
         if (urlSearchParams && urlSearchParams.length > 1) {
-             targetAppsScriptUrl += urlSearchParams;
-        }
+            // Se houver parâmetros, precisamos adicioná-los à URL do Apps Script
+            // ANTES de codificá-la para o AccountChooser.
+            // Para simplificar, o Apps Script vai receber o 'continue' do Chooser,
+            // então montamos a URL final do Apps Script com os parâmetros.
 
-        // 2. Codifica a URL do Apps Script para ser o destino de retorno do Google.
-        const REDIRECT_URL_APPS_SCRIPT = encodeURIComponent(targetAppsScriptUrl);
-        
-        // 3. Monta a URL do Seletor de Contas.
-        const ACCOUNT_CHOOSER_URL = `https://accounts.google.com/AccountChooser/identifier?service=mail&continue=${REDIRECT_URL_APPS_SCRIPT}`;
-        
-        // 4. Redireciona a página inteira para o seletor.
-        console.log("Redirecionando página principal para Seletor de Contas. Destino do Google: Apps Script.");
-        window.location.replace(ACCOUNT_CHOOSER_URL);
-        
-        // A execução para aqui.
-    } 
-    
-    // *******************************************************************
-    // CARREGAMENTO DO IFRAME (SE O FLUXO DE REDIRECIONAMENTO FALHAR, ou for a 2ª carga)
-    // *******************************************************************
-    
-    // Se a URL principal tem ?authuser=X, o iframe é carregado aqui normalmente.
-    // O restante do script de carregamento do iframe e atualização do título permanece igual.
-    
-    if (urlSearchParams && urlSearchParams.length > 1) {
-        finalIframeSrc = APPS_SCRIPT_URL_BASE + urlSearchParams; 
-        console.log("Authuser detectado na URL principal. Iframe carregado diretamente:", finalIframeSrc);
-        
-        finalHash = '#' + urlSearchParams.substring(1); 
-    } else {
-        finalIframeSrc = APPS_SCRIPT_URL_BASE + urlSearchParams; 
-        console.log("Carga inicial com Authuser na URL. Iframe carregado com SRC base e authuser:", finalIframeSrc);
-        
-        finalHash = '#' + 'Bem_vindo'; 
-    }
+            const APPS_SCRIPT_WITH_PARAMS = APPS_SCRIPT_URL_BASE + urlSearchParams;
+            const REDIRECT_URL_WITH_PARAMS = encodeURIComponent(APPS_SCRIPT_WITH_PARAMS);
 
-    // ***** APLICAÇÃO FINAL *****
-    iframeElement.src = finalIframeSrc;
-    
-    // [Restante da lógica de atualização de título (omiti aqui por brevidade)]
-    let objHash = urlSearchParams.substring(1);
-    objHash = objHash.replace(/_/g, " ").replace(/\+/g, " ");
-    let objTextHash = objHash.split('&');
-    for(let i = 0;i<objTextHash.length;i++){
-        if(objTextHash[i].includes("page=")){
-            document.getElementById('app-name').innerText = objTextHash[i].replace("page=","");
+            baseSrcWithChooser = `https://accounts.google.com/v3/signin/accountchooser?flowName=GlifWebSignIn&flowEntry=AccountChooser&continue=${REDIRECT_URL_WITH_PARAMS}`;
+            
+            // Define o SRC final do iframe
+            iframeElement.src = baseSrcWithChooser;
+            console.log("Iframe carregado com Seletor de Contas (com parâmetros da URL):", baseSrcWithChooser);
+            
+            // Converte o Query Param em Hash (Ex: '?page=X' para '#page=X')
+            finalHash = '#' + urlSearchParams.substring(1); 
+        } else {
+            // Se NÃO houver parâmetros, usa o SRC padrão do Account Chooser
+            iframeElement.src = baseSrcWithChooser;
+            console.log("Nenhum parâmetro detectado. Iframe carregado com Seletor de Contas:", baseSrcWithChooser);
+
+            // Hash Bem_vindo
+            finalHash = '#' + 'Bem_vindo'; 
         }
         
-        if(objTextHash[i].includes("veiculo=")){
-            document.getElementById('sub').innerText = objTextHash[i].replace("veiculo=","");
+        // *******************************************************************
+        // LÓGICA DE ATUALIZAÇÃO DE TÍTULO (Mantida a sua lógica original)
+        // *******************************************************************
+
+        let objHash = urlSearchParams.substring(1);
+        objHash = objHash.replace(/_/g, " ").replace(/\+/g, " ");
+        let objTextHash = objHash.split('&');
+        for(let i = 0;i<objTextHash.length;i++){
+            if(objTextHash[i].includes("page=")){
+                document.getElementById('app-name').innerText = objTextHash[i].replace("page=","");
+            }
+            
+            if(objTextHash[i].includes("veiculo=")){
+                document.getElementById('sub').innerText = objTextHash[i].replace("veiculo=","");
+            }
         }
-    }
-    if(!objHash.includes("&")){
-        document.getElementById('app-name').innerText = objHash;
-    }
-</script>
+        if(!objHash.includes("&")){
+            document.getElementById('app-name').innerText = objHash;
+        }
+            
+    </script>
 </body>
 </html>
-
-
-
-
-
-
