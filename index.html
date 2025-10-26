@@ -1,275 +1,256 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="apple-touch-icon" sizes="180x180" href="/master/fav/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/master/fav/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/master/fav/favicon-16x16.png">
-    <link rel="manifest" href="/master/fav/site.webmanifest">
-    <title>G-opec</title>
-    <style>
-        /* [Seu CSS foi mantido aqui para brevidade] */
-        body {
-            box-sizing: border-box;
-            min-height: 100%;
-            margin: 0;
-            padding: 15px 30px;
-            display: flex;
-            flex-direction: column;
-            color: white;
-            font-family: "Segoe UI","Helvetica Neue","Helvetica",Arial,sans-serif;
-            background-color: #2C2C32;
-        }
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <meta http-equiv="X-UA-Compatible" content="ie=edge">
+ <link rel="apple-touch-icon" sizes="180x180" href="/master/fav/apple-touch-icon.png">
+ <link rel="icon" type="image/png" sizes="32x32" href="/master/fav/favicon-32x32.png">
+ <link rel="icon" type="image/png" sizes="16x16" href="/master/fav/favicon-16x16.png">
+ <link rel="manifest" href="/master/fav/site.webmanifest">
+ <title>G-opec</title>
+ <style>
+		body {
+	box-sizing: border-box;
+	min-height: 100%;
+	margin: 0;
+	padding: 15px 30px;
+	display: flex;
+	flex-direction: column;
+	color: white;
+	font-family: "Segoe UI","Helvetica Neue","Helvetica",Arial,sans-serif;
+	background-color: #2C2C32;
+}
 
-        .branding {
-            background-image: url('https://g-opec.github.io/master/fav/favicon-32x32.png');
-            background-size: 24px;
-            background-repeat: no-repeat;
-            background-position: left center;
-            padding-left: 36px;
-            font-size: 20px;
-            letter-spacing: -0.04rem;
-            font-weight: 400;
-            color: white;
-            text-decoration: none;
-        }
-        .container {
-            height: 90vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-        }
-        .icon-container {
-            margin-bottom: 24px;
-        }
-        .dev_photo {
-            width: 153px;
-            height: 153px;
-            border-radius: 50%;
-            border-style: solid;
-            border-color: red;
-            animation: rise-and-glow 1.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-        }
-        .shell-title{
-            display: flex;
-            align-items: center;
-        }
-        .title {
-            font-size: 28px;
-            font-weight: 300;
-            margin: 0 0 0 10px;
-            color: var(--vscode-foreground);
-        }
+.branding {
+	background-image: url('https://g-opec.github.io/master/fav/favicon-32x32.png');
+	background-size: 24px;
+	background-repeat: no-repeat;
+	background-position: left center;
+	padding-left: 36px;
+	font-size: 20px;
+	letter-spacing: -0.04rem;
+	font-weight: 400;
+	color: white;
+	text-decoration: none;
+}
+.container {
+	height: 90vh;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+}
+.icon-container {
+	margin-bottom: 24px;
+}
+.dev_photo {
+	width: 153px;
+	height: 153px;
+	border-radius: 50%;
+	border-style: solid;
+  border-color: red;
+	animation: rise-and-glow 1.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+.shell-title{
+display: flex;
+	align-items: center;
+}
+.title {
+	font-size: 28px;
+	font-weight: 300;
+	margin: 0 0 0 10px;
+	color: var(--vscode-foreground);
+}
 
-        .subtitle {
-            font-size: 18px;
-            font-weight: 300;
-            color: var(--vscode-foreground);
-            opacity: 0.7;
-            margin: 0 0 36px 0;
-        }
+.subtitle {
+	font-size: 18px;
+	font-weight: 300;
+	color: var(--vscode-foreground);
+	opacity: 0.7;
+	margin: 0 0 36px 0;
+}
 
-        .detail {
-            font-size: 14px;
-            color: var(--vscode-foreground);
-            opacity: 0.7;
-            margin: 0;
-        }
-        .shell-loader {
-            flex-grow: 1;
-            display: -webkit-box;
-            display: -ms-flexbox;
-            display: flex;
-            opacity: 0;
-            box-sizing: border-box;
-            -webkit-animation: shell-display .1s linear;
-            animation: shell-display .1s linear;
-            -webkit-animation-delay: .3s;
-            animation-delay: .3s;
-            -webkit-animation-fill-mode: forwards;
-            animation-fill-mode: forwards;
-            overflow: hidden
-        }
+.detail {
+	font-size: 14px;
+	color: var(--vscode-foreground);
+	opacity: 0.7;
+	margin: 0;
+}
+.shell-loader {
+                    flex-grow: 1;
+                    display: -webkit-box;
+                    display: -ms-flexbox;
+                    display: flex;
+                    opacity: 0;
+                    box-sizing: border-box;
+                    -webkit-animation: shell-display .1s linear;
+                    animation: shell-display .1s linear;
+                    -webkit-animation-delay: .3s;
+                    animation-delay: .3s;
+                    -webkit-animation-fill-mode: forwards;
+                    animation-fill-mode: forwards;
+                    overflow: hidden
+                }
 
-        .shell-loader__spinner::after {
-            content: '';
-            display: inline-block;
-            width: 2.2rem;
-            height: 2.2rem;
-            margin: 0 auto;
-            padding: 0;
-            border-top: 2px solid rgba(121, 120, 120, 0.25);
-            border-right: 2px solid rgba(121, 120, 120, 0.25);
-            border-bottom: 2px solid rgba(121, 120, 120, 0.25);
-            border-left: 2px solid #ff0000;
-            -webkit-animation: shell-loading-spinner .5s infinite linear;
-            animation: shell-loading-spinner .5s infinite linear;
-            border-radius: 50%;
-            box-sizing: border-box
-        }
+                /*.shell-loader__spinner {
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    margin-right: -50%;
+                    transform: translate(-50%, -50%)
+                }*/
 
-        @-webkit-keyframes shell-loading-spinner {
-            100% {
-                -webkit-transform: rotate(360deg);
-                transform: rotate(360deg)
-            }
-        }
+                .shell-loader__spinner::after {
+                    content: '';
+                    display: inline-block;
+                    width: 2.2rem;
+                    height: 2.2rem;
+                    margin: 0 auto;
+                    padding: 0;
+                    border-top: 2px solid rgba(121, 120, 120, 0.25);
+                    border-right: 2px solid rgba(121, 120, 120, 0.25);
+                    border-bottom: 2px solid rgba(121, 120, 120, 0.25);
+                    border-left: 2px solid #ff0000;
+                    -webkit-animation: shell-loading-spinner .5s infinite linear;
+                    animation: shell-loading-spinner .5s infinite linear;
+                    border-radius: 50%;
+                    box-sizing: border-box
+                }
 
-        @keyframes shell-loading-spinner {
-            100% {
-                -webkit-transform: rotate(360deg);
-                transform: rotate(360deg)
-            }
-        }
-        @-webkit-keyframes shell-display {
-            0% {
-                opacity: 0
-            }
+                @-webkit-keyframes shell-loading-spinner {
+                    100% {
+                        -webkit-transform: rotate(360deg);
+                        transform: rotate(360deg)
+                    }
+                }
 
-            100% {
-                opacity: 1
-            }
-        }
+                @keyframes shell-loading-spinner {
+                    100% {
+                        -webkit-transform: rotate(360deg);
+                        transform: rotate(360deg)
+                    }
+                }
+				 @-webkit-keyframes shell-display {
+                    0% {
+                        opacity: 0
+                    }
 
-        @keyframes shell-display {
-            0% {
-                opacity: 0
-            }
+                    100% {
+                        opacity: 1
+                    }
+                }
 
-            100% {
-                opacity: 1
-            }
-        }
+                @keyframes shell-display {
+                    0% {
+                        opacity: 0
+                    }
 
-        .responsive-iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            bottom: 0;
-            right: 0;
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-    </style>
-</head>
+                    100% {
+                        opacity: 1
+                    }
+                }
+
+.responsive-iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+</style>
+ </head> 
 <body>
-    <a class="branding" href="https://g-opec.github.io/master/">
-        G-opec
-    </a>
-    <div class="container">
-        <div class="content">
-            <div class="icon-container">
-                <img src="https://g-opec.github.io/master/dev_photo.png" class="dev_photo">
-            </div>
-            <div class="shell-title">
-                <div class="shell-loader" data-a-target="shell-loader">
-                    <div class="shell-loader__spinner"></div>
-                </div>	
-                <h1 class="title">Carregando página <span id="app-name"></span></h1>
-            </div>
-            <p id="sub"></p>
-            <div class="message">
-                <div class="success-message">
-                    <p class="subtitle"></p>
-                    <p class="detail"></p>
-                </div>
-                <div class="error-message">
-                    <p class="subtitle"></p>
-                    <div class="detail"></div>
-                </div>
-            </div>
-        </div>
-    </div>
+   <a class="branding" href="https://g-opec.github.io/master/">
+		G-opec
+	</a>
+	<div class="container">
+	<div class="content">
+			<div class="icon-container">
+				<img src="https://g-opec.github.io/master/dev_photo.png" class="dev_photo">
+			</div>
+			<div class="shell-title">
+			<div class="shell-loader" data-a-target="shell-loader">
+                <div class="shell-loader__spinner"></div>
+            </div>	
+			<h1 class="title">Carregando página <span id="app-name"></span></h1>
+			</div>
+         <p id="sub"></p>
+			<div class="message">
+				<div class="success-message">
+					<p class="subtitle"></p>
+					<p class="detail"></p>
+				</div>
+				<div class="error-message">
+					<p class="subtitle"></p>
+					<div class="detail"></div>
+				</div>
+			</div>
+		</div>
+	</div>
 
-    <iframe id='my-gas-iframe' class="responsive-iframe"  allow="fullscreen; autoplay; camera; microphone; payment; geolocation">
-    </iframe>
+<iframe id='my-gas-iframe' class="responsive-iframe" src="https://script.google.com/macros/s/AKfycbwPhXp8NbSH6JbEERcbxqSTix86QeilygGmH3PlQuTGJP8QVrhdQHo-Uob4powmTmOI5w/exec" allow="fullscreen; autoplay; camera; microphone; payment; geolocation">
+</iframe>
 
-    <script>
-        // *******************************************************************
-        // LÓGICA PARA FORÇAR A ESCOLHA DA CONTA (SOLUÇÃO MULTI-LOGIN)
-        // *******************************************************************
-
-        // 1. Defina a URL base do seu Web App Apps Script (SUA URL COMPLETA)
-        // **IMPORTANTE: Substitua pela URL real do seu Web App.
-        const APPS_SCRIPT_URL_BASE = 'https://script.google.com/macros/s/AKfycbwPhXp8NbSH6JbEERcbxqSTix86QeilygGmH3PlQuTGJP8QVrhdQHo-Uob4powmTmOI5w/exec';
-
-        // 2. Codifique a URL do Web App para o redirecionamento do Google
-        const REDIRECT_URL = encodeURIComponent(APPS_SCRIPT_URL_BASE);
-        
-        // 3. Monta a URL do Seletor de Contas do Google.
-        // O parâmetro 'continue' garante que, após a escolha,
-        // o navegador seja redirecionado para a URL do Apps Script,
-        // com o parâmetro ?authuser=X já anexado.
-        const ACCOUNT_CHOOSER_URL = `https://accounts.google.com/v3/signin/accountchooser?flowName=GlifWebSignIn&flowEntry=AccountChooser&continue=${REDIRECT_URL}`;
-
-        // *******************************************************************
-        // LÓGICA EXISTENTE PARA PASSAGEM DE PARÂMETROS
-        // *******************************************************************
+<script>
     
-        // 4. Encontrar o elemento iframe pelo seu ID
-        const iframeElement = document.getElementById('my-gas-iframe');
+    // 1. Encontrar o elemento iframe pelo seu ID
+    const iframeElement = document.getElementById('my-gas-iframe');
 
-        // 5. O SRC base agora é a URL do Account Chooser
-        let baseSrcWithChooser = ACCOUNT_CHOOSER_URL;
+    // 2. Capturar a URL base original (o que está no atributo src do HTML)
+    const baseSrc = iframeElement.src;
 
-        // 6. Obter a string de busca completa da página principal
-        const urlSearchParams = window.location.search;
-        
-        let finalHash = ''; 
+    // 3. Obter a string de busca completa da página principal (ex: "?page=OUTRA&id=123")
+    const urlSearchParams = window.location.search;
     
-        // 7. Verificar se há algum parâmetro na URL da página principal.
-        if (urlSearchParams && urlSearchParams.length > 1) {
-            // Se houver parâmetros, precisamos adicioná-los à URL do Apps Script
-            // ANTES de codificá-la para o AccountChooser.
-            // Para simplificar, o Apps Script vai receber o 'continue' do Chooser,
-            // então montamos a URL final do Apps Script com os parâmetros.
-
-            const APPS_SCRIPT_WITH_PARAMS = APPS_SCRIPT_URL_BASE + urlSearchParams;
-            const REDIRECT_URL_WITH_PARAMS = encodeURIComponent(APPS_SCRIPT_WITH_PARAMS);
-
-            baseSrcWithChooser = `https://accounts.google.com/v3/signin/accountchooser?flowName=GlifWebSignIn&flowEntry=AccountChooser&continue=${REDIRECT_URL_WITH_PARAMS}`;
-            
-            // Define o SRC final do iframe
-            iframeElement.src = baseSrcWithChooser;
-            console.log("Iframe carregado com Seletor de Contas (com parâmetros da URL):", baseSrcWithChooser);
-            
-            // Converte o Query Param em Hash (Ex: '?page=X' para '#page=X')
-            finalHash = '#' + urlSearchParams.substring(1); 
-        } else {
-            // Se NÃO houver parâmetros, usa o SRC padrão do Account Chooser
-            iframeElement.src = baseSrcWithChooser;
-            console.log("Nenhum parâmetro detectado. Iframe carregado com Seletor de Contas:", baseSrcWithChooser);
-
-            // Hash Bem_vindo
-            finalHash = '#' + 'Bem_vindo'; 
-        }
+    let finalHash = '';          // String para o hash final na URL principal (deve começar com #)
+ 
+    // 4. Verificar se há algum parâmetro na URL da página principal.
+    // O 'urlSearchParams' terá um comprimento > 1 se tiver um '?' seguido de algo.
+    if (urlSearchParams && urlSearchParams.length > 1) {
+        // Se houver parâmetros, apensa a string de busca completa ao SRC do iframe.
+        const newSrc = baseSrc + urlSearchParams; 
         
-        // *******************************************************************
-        // LÓGICA DE ATUALIZAÇÃO DE TÍTULO (Mantida a sua lógica original)
-        // *******************************************************************
+        // 5. Atualiza o SRC do iframe ANTES dele carregar.
+        iframeElement.src = newSrc;
+        console.log("Iframe carregado com parâmetros da URL:", newSrc);
+     
+        // Converte o Query Param em Hash (Ex: '?page=X' para '#page=X')
+        finalHash = '#' + urlSearchParams.substring(1); 
+        
 
-        let objHash = urlSearchParams.substring(1);
-        objHash = objHash.replace(/_/g, " ").replace(/\+/g, " ");
-        let objTextHash = objHash.split('&');
-        for(let i = 0;i<objTextHash.length;i++){
-            if(objTextHash[i].includes("page=")){
-                document.getElementById('app-name').innerText = objTextHash[i].replace("page=","");
-            }
-            
-            if(objTextHash[i].includes("veiculo=")){
-                document.getElementById('sub').innerText = objTextHash[i].replace("veiculo=","");
-            }
-        }
-        if(!objHash.includes("&")){
-            document.getElementById('app-name').innerText = objHash;
-        }
-            
-    </script>
+    } else {
+        // Se NÃO houver parâmetros, o iframe mantém o 'baseSrc' original e
+        // carrega o SRC padrão (que você garante que mostrará 'BEM_VINDO').
+        // Nenhuma ação é necessária, mas deixamos o log para confirmação.
+        console.log("Nenhum parâmetro detectado. Iframe carregado com SRC padrão:", baseSrc);
+
+        // Hash Bem_vindo
+        finalHash = '#' + 'Bem_vindo'; 
+    }
+    let objHash = urlSearchParams.substring(1);
+    objHash = objHash.replace(/_/g, " ").replace(/\+/g, " ");
+    let objTextHash = objHash.split('&');
+    for(let i = 0;i<objTextHash.length;i++){
+      if(objTextHash[i].includes("page=")){
+         document.getElementById('app-name').innerText = objTextHash[i].replace("page=","");
+      }
+      
+      if(objTextHash[i].includes("veiculo=")){
+         document.getElementById('sub').innerText = objTextHash[i].replace("veiculo=","");
+      }
+    }
+    if(!objHash.includes("&")){
+      document.getElementById('app-name').innerText = objHash;
+    }
+     
+</script>
 </body>
 </html>
+
+
 
 
