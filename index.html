@@ -204,7 +204,7 @@
         // O parâmetro 'continue' garante que, após a escolha,
         // o navegador seja redirecionado para a URL do Apps Script,
         // com o parâmetro ?authuser=X já anexado.
-        const ACCOUNT_CHOOSER_URL = `https://accounts.google.com/AccountChooser/identifier?service=mail&continue=${REDIRECT_URL}`;
+        const ACCOUNT_CHOOSER_URL = `https://accounts.google.com/v3/signin/accountchooser?flowName=GlifWebSignIn&flowEntry=AccountChooser&continue=${REDIRECT_URL}`;
 
         // *******************************************************************
         // LÓGICA EXISTENTE PARA PASSAGEM DE PARÂMETROS
@@ -271,4 +271,5 @@
     </script>
 </body>
 </html>
+
 
