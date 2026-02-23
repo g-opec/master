@@ -196,64 +196,60 @@ display: flex;
 </iframe>
 
 <script>
-    
-    // 1. Encontrar o elemento iframe pelo seu ID
+    // 1. Encontrar o elemento iframe e definir a URL base do Apps Script
     const iframeElement = document.getElementById('my-gas-iframe');
+    const baseSrc = "https://script.google.com/macros/s/AKfycbwPhXp8NbSH6JbEERcbxqSTix86QeilygGmH3PlQuTGJP8QVrhdQHo-Uob4powmTmOI5w/exec";
 
-    // 2. Capturar a URL base original (o que está no atributo src do HTML)
-    const baseSrc = iframeElement.src;
-
-    // 3. Obter a string de busca completa da página principal (ex: "?page=OUTRA&id=123")
-    const urlSearchParams = window.location.search;
+    // 2. Pegar os parâmetros da URL principal do navegador
+    const urlParams = new URLSearchParams(window.location.search);
     
-    let finalHash = '';          // String para o hash final na URL principal (deve começar com #)
- 
-    // 4. Verificar se há algum parâmetro na URL da página principal.
-    // O 'urlSearchParams' terá um comprimento > 1 se tiver um '?' seguido de algo.
-    if (urlSearchParams && urlSearchParams.length > 1) {
-        // Se houver parâmetros, apensa a string de busca completa ao SRC do iframe.
-        const newSrc = baseSrc + urlSearchParams; 
+    // 3. Gerenciar o 'authuser' secretamente na sessão do navegador
+    let authuser = urlParams.get('authuser');
+    
+    if (authuser) {
+        // Se o authuser veio na URL (acabou de fazer login), salva na sessão da aba atual
+        sessionStorage.setItem('gopec_authuser', authuser);
         
-        // 5. Atualiza o SRC do iframe ANTES dele carregar.
-        iframeElement.src = newSrc;
-        console.log("Iframe carregado com parâmetros da URL:", newSrc);
-     
-        // Converte o Query Param em Hash (Ex: '?page=X' para '#page=X')
-        finalHash = '#' + urlSearchParams.substring(1); 
+        // Apaga o authuser dos parâmetros da URL
+        urlParams.delete('authuser');
         
-
+        // Limpa a barra de endereços do navegador instantaneamente (sem recarregar a página)
+        const novaUrlVisivel = window.location.pathname + (urlParams.toString() ? '?' + urlParams.toString() : '');
+        window.history.replaceState({}, document.title, novaUrlVisivel);
     } else {
-        // Se NÃO houver parâmetros, o iframe mantém o 'baseSrc' original e
-        // carrega o SRC padrão (que você garante que mostrará 'BEM_VINDO').
-        // Nenhuma ação é necessária, mas deixamos o log para confirmação.
-        console.log("Nenhum parâmetro detectado. Iframe carregado com SRC padrão:", baseSrc);
+        // Se não veio na URL (ex: o usuário mudou de página internamente), recupera da memória
+        authuser = sessionStorage.getItem('gopec_authuser');
+    }
 
-        // Hash Bem_vindo
-        finalHash = '#' + 'Bem_vindo'; 
+    // 4. Montar a URL real do Iframe que vai para os servidores do Google
+    // Pega os parâmetros visíveis atuais (como page=Relatorios&veiculo=Massa Lages)
+    const iframeParams = new URLSearchParams(window.location.search); 
+    
+    if (authuser) {
+        // Injeta o authuser escondido direto para o Google Apps Script não perder a conta
+        iframeParams.set('authuser', authuser); 
     }
-    let objHash = urlSearchParams.substring(1);
-	if(!objHash.includes("?")){
-      document.getElementById('sub').innerText = "Sincronizando Autorizações do Usuario";
+    
+    // Carrega o Iframe
+    const finalQuery = iframeParams.toString();
+    iframeElement.src = finalQuery ? baseSrc + '?' + finalQuery : baseSrc;
+    console.log("Iframe carregado, authuser oculto do usuário.");
+
+    // 5. Atualizar os textos da tela preta de carregamento do Shell
+    let pageName = iframeParams.get('page') || "Bem_vindo";
+    let veiculoName = iframeParams.get('veiculo');
+
+    document.getElementById('app-name').innerText = pageName.replace(/_/g, " ");
+    
+    if (pageName !== "Bem_vindo" && veiculoName) {
+        document.getElementById('sub').innerText = veiculoName;
+    } else {
+        document.getElementById('sub').innerText = "Sincronizando Autorizações do Usuário";
     }
-    objHash = objHash.replace(/_/g, " ").replace(/\+/g, " ");
-    let objTextHash = objHash.split('&');
-    for(let i = 0;i<objTextHash.length;i++){
-      if(objTextHash[i].includes("page=")){
-         document.getElementById('app-name').innerText = objTextHash[i].replace("page=","");
-      }
-      
-      if(objTextHash[i].includes("veiculo=")){
-         document.getElementById('sub').innerText = objTextHash[i].replace("veiculo=","");
-      }
-    }
-    if(!objHash.includes("&")){
-      document.getElementById('app-name').innerText = objHash;
-    }
-	
-     
 </script>
 </body>
 </html>
+
 
 
 
