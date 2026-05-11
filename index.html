@@ -268,7 +268,15 @@ display: flex;
     try {
       const permission = await Notification.requestPermission();
       if (permission === 'granted') {
-        const token = await getToken(messaging, { vapidKey: 'BLWnKiTWLlGeqztjOn7dXcVr2ip8xaHvA782mSPHTiqSDd--Z3F1yJLZaJ3h10MBAGScF2alP-0RJ4F-unNVcwE' });
+        
+        // 1. Registra o Service Worker manualmente apontando para a pasta /master/
+        const registration = await navigator.serviceWorker.register('/master/firebase-messaging-sw.js');
+        
+        // 2. Passa o registro (registration) para o getToken do Firebase
+        const token = await getToken(messaging, { 
+          vapidKey: 'BLWnKiTWLlGeqztjOn7dXcVr2ip8xaHvA782mSPHTiqSDd--Z3F1yJLZaJ3h10MBAGScF2alP-0RJ4F-unNVcwE',
+          serviceWorkerRegistration: registration 
+        });
         
         if (token) {
           console.log('Token FCM:', token);
