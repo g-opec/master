@@ -247,6 +247,53 @@ display: flex;
         document.getElementById('sub').innerText = "Sincronizando Autorizações do Usuário";
     }
 </script>
+	<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
+  import { getMessaging, getToken } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-messaging.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBndygRH9DVMivhAPxKlM4sOGyHyLsXw74",
+    authDomain: "g-opec-a2e19.firebaseapp.com",
+    projectId: "g-opec-a2e19",
+    storageBucket: "g-opec-a2e19.firebasestorage.app",
+    messagingSenderId: "539687706447",
+    appId: "1:539687706447:web:66c89dcd63acbe47576f3a"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const messaging = getMessaging(app);
+
+  // Pede permissão e pega o token
+  async function requestPermissionAndGetToken() {
+    try {
+      const permission = await Notification.requestPermission();
+      if (permission === 'granted') {
+        const token = await getToken(messaging, { vapidKey: 'BLWnKiTWLlGeqztjOn7dXcVr2ip8xaHvA782mSPHTiqSDd--Z3F1yJLZaJ3h10MBAGScF2alP-0RJ4F-unNVcwE' });
+        
+        if (token) {
+          console.log('Token FCM:', token);
+          enviarTokenParaAppsScript(token);
+        }
+      }
+    } catch (error) {
+      console.log('Erro ao pegar permissão', error);
+    }
+  }
+
+  function enviarTokenParaAppsScript(fcmToken) {
+    const urlSeuWebAppGAS = "https://script.google.com/macros/s/AKfycbwPhXp8NbSH6JbEERcbxqSTix86QeilygGmH3PlQuTGJP8QVrhdQHo-Uob4powmTmOI5w/exec"; // URL doPost
+    
+    // email do usuário logado se já tiver no front-end, 
+    // ou tratar isso do lado do GAS.
+    fetch(urlSeuWebAppGAS, {
+      method: 'POST',
+      body: JSON.stringify({ action: 'saveToken', token: fcmToken })
+    });
+  }
+
+  // Chame a função quando a página carregar (ou via um botão "Ativar Notificações")
+  requestPermissionAndGetToken();
+</script>
 </body>
 </html>
 
