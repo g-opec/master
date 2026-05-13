@@ -289,15 +289,27 @@ display: flex;
   }
 
   function enviarTokenParaAppsScript(fcmToken) {
-    const urlSeuWebAppGAS = "https://script.google.com/macros/s/AKfycbz9nmtjMBrkQ4PsXMUiYpNy93vxMuwfnxIrwYKave3sWNfvsDBDiL___LHS8FOYQh15/exec"; // URL doPost
-    
-    // email do usuário logado se já tiver no front-end, 
-    // ou tratar isso do lado do GAS.
-    fetch(urlSeuWebAppGAS, {
-      method: 'POST',
-      body: JSON.stringify({ action: 'saveToken', token: fcmToken })
-    });
-  }
+  const urlSeuWebAppGAS = "https://script.google.com/macros/s/AKfycbz9nmtjMBrkQ4PsXMUiYpNy93vxMuwfnxIrwYKave3sWNfvsDBDiL___LHS8FOYQh15/exec"; 
+  const emailUsuario = sessionStorage.getItem('gopec_authuser');
+  
+  console.log('Enviando token para o GAS...');
+
+  fetch(urlSeuWebAppGAS, {
+    method: 'POST',
+    // Usar text/plain evita o erro de CORS Preflight no Apps Script
+    headers: {
+      'Content-Type': 'text/plain;charset=utf-8'
+    },
+    body: JSON.stringify({ action: 'saveToken', token: fcmToken, email: emailUsuario })
+  })
+  .then(response => response.json())
+  .then(data => {
+    console.log('Resposta do Apps Script:', data); // Agora isso aparecerá no console!
+  })
+  .catch(error => {
+    console.error('Erro de conexão/CORS ao contatar o GAS:', error);
+  });
+}
 
   // Chame a função quando a página carregar (ou via um botão "Ativar Notificações")
   requestPermissionAndGetToken();
