@@ -162,8 +162,41 @@ display: flex;
   border: none;
 }
 </style>
-	<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
+ </head> 
+<body>
+   <a class="branding" href="https://g-opec.github.io/master/">
+		G-opec
+	</a>
+	<div class="container">
+	<div class="content">
+			<div class="icon-container">
+				<img src="https://g-opec.github.io/master/dev_photo.png" class="dev_photo">
+			</div>
+			<div class="shell-title">
+			<div class="shell-loader" data-a-target="shell-loader">
+                <div class="shell-loader__spinner"></div>
+            </div>	
+			<h1 class="title">Carregando página <span id="app-name"></span></h1>
+			</div>
+         <p id="sub"></p>
+			<div class="message">
+				<div class="success-message">
+					<p class="subtitle"></p>
+					<p class="detail"></p>
+				</div>
+				<div class="error-message">
+					<p class="subtitle"></p>
+					<div class="detail"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+<iframe id='my-gas-iframe' class="responsive-iframe" src="https://script.google.com/macros/s/AKfycbwPhXp8NbSH6JbEERcbxqSTix86QeilygGmH3PlQuTGJP8QVrhdQHo-Uob4powmTmOI5w/exec" allow="fullscreen; autoplay; camera; microphone; payment; geolocation">
+</iframe>
+
+<script>
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
   import { getMessaging, getToken } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-messaging.js";
 
   const firebaseConfig = {
@@ -216,41 +249,7 @@ display: flex;
 
   // Chame a função quando a página carregar (ou via um botão "Ativar Notificações")
   requestPermissionAndGetToken();
-</script>
- </head> 
-<body>
-   <a class="branding" href="https://g-opec.github.io/master/">
-		G-opec
-	</a>
-	<div class="container">
-	<div class="content">
-			<div class="icon-container">
-				<img src="https://g-opec.github.io/master/dev_photo.png" class="dev_photo">
-			</div>
-			<div class="shell-title">
-			<div class="shell-loader" data-a-target="shell-loader">
-                <div class="shell-loader__spinner"></div>
-            </div>	
-			<h1 class="title">Carregando página <span id="app-name"></span></h1>
-			</div>
-         <p id="sub"></p>
-			<div class="message">
-				<div class="success-message">
-					<p class="subtitle"></p>
-					<p class="detail"></p>
-				</div>
-				<div class="error-message">
-					<p class="subtitle"></p>
-					<div class="detail"></div>
-				</div>
-			</div>
-		</div>
-	</div>
-
-<iframe id='my-gas-iframe' class="responsive-iframe" src="https://script.google.com/macros/s/AKfycbwPhXp8NbSH6JbEERcbxqSTix86QeilygGmH3PlQuTGJP8QVrhdQHo-Uob4powmTmOI5w/exec" allow="fullscreen; autoplay; camera; microphone; payment; geolocation">
-</iframe>
-
-<script>
+	
     // 1. Encontrar o elemento iframe e definir a URL base do Apps Script
     const iframeElement = document.getElementById('my-gas-iframe');
     const baseSrc = "https://script.google.com/macros/s/AKfycbwPhXp8NbSH6JbEERcbxqSTix86QeilygGmH3PlQuTGJP8QVrhdQHo-Uob4powmTmOI5w/exec";
