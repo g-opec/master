@@ -196,16 +196,6 @@ display: flex;
 </iframe>
 
 <script>
-  // Exibe o progresso visual
-  let progress = 0;
-  const progressBar = document.getElementById('progress');
-  const interval = setInterval(() => {
-    if (progress < 90) {
-      progress += 10;
-      progressBar.style.width = progress + '%';
-    }
-  }, 200);
-
   // FUNÇÃO DE CARREGAMENTO (Agora aceita o token FCM)
   function carregarIframe(fcmToken = null) {
     const iframeElement = document.getElementById('my-gas-iframe');
@@ -238,14 +228,6 @@ display: flex;
     document.getElementById('app-name').innerText = pageName.replace(/_/g, " ");
     document.getElementById('sub').innerText = (pageName !== "Bem_vindo" && veiculoName) ? veiculoName : "Sincronizando Autorizações do Usuário";
 
-    // Finaliza a barra de progresso quando o iframe carregar
-    iframeElement.onload = function() {
-      clearInterval(interval);
-      progressBar.style.width = '100%';
-      setTimeout(() => {
-        document.getElementById('loading-screen').style.display = 'none';
-      }, 500);
-    };
   }
 </script>
 	<script type="module">
