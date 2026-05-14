@@ -196,123 +196,99 @@ display: flex;
 </iframe>
 
 <script>
-    // 1. Encontrar o elemento iframe e definir a URL base do Apps Script
+  // Exibe o progresso visual
+  let progress = 0;
+  const progressBar = document.getElementById('progress');
+  const interval = setInterval(() => {
+    if (progress < 90) {
+      progress += 10;
+      progressBar.style.width = progress + '%';
+    }
+  }, 200);
+
+  // FUNÇÃO DE CARREGAMENTO (Agora aceita o token FCM)
+  function carregarIframe(fcmToken = null) {
     const iframeElement = document.getElementById('my-gas-iframe');
+    // URL do seu Script Principal
     const baseSrc = "https://script.google.com/macros/s/AKfycbwPhXp8NbSH6JbEERcbxqSTix86QeilygGmH3PlQuTGJP8QVrhdQHo-Uob4powmTmOI5w/exec";
-
-    // 2. Pegar os parâmetros da URL principal do navegador
+    
     const urlParams = new URLSearchParams(window.location.search);
+    let authuser = urlParams.get('authuser') || sessionStorage.getItem('gopec_authuser');
     
-    // 3. Gerenciar o 'authuser' secretamente na sessão do navegador
-    let authuser = urlParams.get('authuser');
-    
-    if (authuser) {
-        // Se o authuser veio na URL (acabou de fazer login), salva na sessão da aba atual
-        sessionStorage.setItem('gopec_authuser', authuser);
-        
-        // Apaga o authuser dos parâmetros da URL
-        urlParams.delete('authuser');
-        
-        // Limpa a barra de endereços do navegador instantaneamente (sem recarregar a página)
-        const novaUrlVisivel = window.location.pathname + (urlParams.toString() ? '?' + urlParams.toString() : '');
-        window.history.replaceState({}, document.title, novaUrlVisivel);
-    } else {
-        // Se não veio na URL (ex: o usuário mudou de página internamente), recupera da memória
-        authuser = sessionStorage.getItem('gopec_authuser');
+    if (urlParams.get('authuser')) {
+      sessionStorage.setItem('gopec_authuser', authuser);
+      urlParams.delete('authuser');
+      window.history.replaceState({}, document.title, window.location.pathname + (urlParams.toString() ? '?' + urlParams.toString() : ''));
     }
 
-    // 4. Montar a URL real do Iframe que vai para os servidores do Google
-    // Pega os parâmetros visíveis atuais (como page=Relatorios&veiculo=Massa Lages)
     const iframeParams = new URLSearchParams(window.location.search); 
+    if (authuser) iframeParams.set('authuser', authuser); 
     
-    if (authuser) {
-        // Injeta o authuser escondido direto para o Google Apps Script não perder a conta
-        iframeParams.set('authuser', authuser); 
+    // INJETA O TOKEN NA URL SE ELE EXISTIR
+    if (fcmToken) {
+      iframeParams.set('fcmToken', fcmToken);
     }
     
-    // Carrega o Iframe
     const finalQuery = iframeParams.toString();
     iframeElement.src = finalQuery ? baseSrc + '?' + finalQuery : baseSrc;
-    console.log("Iframe carregado, authuser oculto do usuário.");
 
-    // 5. Atualizar os textos da tela preta de carregamento do Shell
+    // Ajusta textos da tela de carregamento
     let pageName = iframeParams.get('page') || "Bem_vindo";
     let veiculoName = iframeParams.get('veiculo');
-
     document.getElementById('app-name').innerText = pageName.replace(/_/g, " ");
-    
-    if (pageName !== "Bem_vindo" && veiculoName) {
-        document.getElementById('sub').innerText = veiculoName;
-    } else {
-        document.getElementById('sub').innerText = "Sincronizando Autorizações do Usuário";
-    }
+    document.getElementById('sub').innerText = (pageName !== "Bem_vindo" && veiculoName) ? veiculoName : "Sincronizando Autorizações do Usuário";
+
+    // Finaliza a barra de progresso quando o iframe carregar
+    iframeElement.onload = function() {
+      clearInterval(interval);
+      progressBar.style.width = '100%';
+      setTimeout(() => {
+        document.getElementById('loading-screen').style.display = 'none';
+      }, 500);
+    };
+  }
 </script>
 	<script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
   import { getMessaging, getToken } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-messaging.js";
 
   const firebaseConfig = {
-    apiKey: "AIzaSyBndygRH9DVMivhAPxKlM4sOGyHyLsXw74",
+    apiKey: "AIzaSyBv...", // Mantenha suas chaves originais aqui
     authDomain: "g-opec-a2e19.firebaseapp.com",
     projectId: "g-opec-a2e19",
-    storageBucket: "g-opec-a2e19.firebasestorage.app",
-    messagingSenderId: "539687706447",
-    appId: "1:539687706447:web:66c89dcd63acbe47576f3a"
+    storageBucket: "g-opec-a2e19.appspot.com",
+    messagingSenderId: "365851412015",
+    appId: "1:365851412015:web:5317429699f848b3014c0a"
   };
 
   const app = initializeApp(firebaseConfig);
   const messaging = getMessaging(app);
 
-  // Pede permissão e pega o token
-  async function requestPermissionAndGetToken() {
+  async function inicializarApp() {
+    let tokenEncontrado = null;
     try {
       const permission = await Notification.requestPermission();
       if (permission === 'granted') {
-        
-        // 1. Registra o Service Worker manualmente apontando para a pasta /master/
         const registration = await navigator.serviceWorker.register('/master/firebase-messaging-sw.js');
-        
-        // 2. Passa o registro (registration) para o getToken do Firebase
         const token = await getToken(messaging, { 
           vapidKey: 'BLWnKiTWLlGeqztjOn7dXcVr2ip8xaHvA782mSPHTiqSDd--Z3F1yJLZaJ3h10MBAGScF2alP-0RJ4F-unNVcwE',
           serviceWorkerRegistration: registration 
         });
         
         if (token) {
-          console.log('Token FCM:', token);
-          enviarTokenParaAppsScript(token);
+          console.log('Token capturado:', token);
+          tokenEncontrado = token;
         }
       }
     } catch (error) {
-      console.log('Erro ao pegar permissão', error);
+      console.log('Erro ao obter token FCM, carregando sem notificações:', error);
     }
+    
+    // CHAMA O CARREGAMENTO DO IFRAME (com ou sem token)
+    carregarIframe(tokenEncontrado);
   }
 
-  function enviarTokenParaAppsScript(fcmToken) {
-  const urlSeuWebAppGAS = "https://script.google.com/macros/s/AKfycbz9nmtjMBrkQ4PsXMUiYpNy93vxMuwfnxIrwYKave3sWNfvsDBDiL___LHS8FOYQh15/exec"; 
-  const emailUsuario = sessionStorage.getItem('gopec_authuser');
-  
-  console.log('Enviando token para o GAS...');
-
-  fetch(urlSeuWebAppGAS, {
-    method: 'POST',
-    // Usar text/plain evita o erro de CORS Preflight no Apps Script
-    headers: {
-      'Content-Type': 'text/plain;charset=utf-8'
-    },
-    body: JSON.stringify({ action: 'saveToken', token: fcmToken, email: emailUsuario })
-  })
-  .then(response => response.json())
-  .then(data => {
-    console.log('Resposta do Apps Script:', data); // Agora isso aparecerá no console!
-  })
-  .catch(error => {
-    console.error('Erro de conexão/CORS ao contatar o GAS:', error);
-  });
-}
-
-  // Chame a função quando a página carregar (ou via um botão "Ativar Notificações")
-  requestPermissionAndGetToken();
+  inicializarApp();
 </script>
 </body>
 </html>
